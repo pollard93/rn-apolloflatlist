@@ -1,0 +1,87 @@
+{
+  "name": "mbp-components-rn-npm-boilerplate",
+  "version": "0.2.1",
+  "description": "Boilerplate to quickstart React Native component development",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "build:watch": "webpack --watch --config webpack.config.js",
+    "format:clean": "rimraf dist",
+    "prepare": "run-s format:clean build",
+    "setup:example": "./node_modules/.bin/ts-node ./scripts/setup:example.ts",
+    "start": "yarn start:ios:example",
+    "start:android": "cd example && yarn android",
+    "start:android:example": "run-s start:android build:watch",
+    "start:ios": "cd example && yarn ios",
+    "start:ios:example": "run-s start:ios build:watch",
+    "test": "run-s test:lint test:unit build",
+    "test:lint": "./node_modules/.bin/eslint \"./**/*.{js,ts,tsx}\"",
+    "test:package": "npx scriptlint --strict",
+    "test:unit": "jest",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-native": "^0.61.23",
+    "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "babel-jest": "^25.1.0",
+    "chai": "^4.2.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-native": "^3.8.1",
+    "jest": "^25.1.0",
+    "jest-enzyme": "^7.1.2",
+    "mock-async-storage": "^2.2.0",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-native": "0.60.5",
+    "react-test-renderer": "^16.13.0",
+    "rimraf": "^3.0.2",
+    "scriptlint": "^2.0.4",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.7.0",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.6",
+    "react-native": ">= 0.60.5"
+  },
+  "jest": {
+    "preset": "react-native",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/example/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/example/"
+    ]
+  },
+  "scriptlint": {
+    "ignoreScripts": [
+      "start:android",
+      "start:ios"
+    ]
+  }
+}

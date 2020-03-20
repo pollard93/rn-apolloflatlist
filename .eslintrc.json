@@ -1,0 +1,161 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": "airbnb-base",
+  "globals": {
+    "window": true,
+    "document": true,
+    "localStorage": true,
+    "FormData": true,
+    "FileReader": true,
+    "Blob": true,
+    "navigator": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "eslint-plugin-react",
+    "react-native"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".tsx"
+        ]
+      }
+    ],
+    "react/jsx-uses-react": [
+      "error"
+    ],
+    "react/jsx-uses-vars": [
+      "error"
+    ],
+    "comma-dangle": [
+      "error"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "no-return-assign": [
+      "off"
+    ],
+    "import/no-named-as-default": [
+      "off"
+    ],
+    "import/no-named-as-default-member": [
+      "off"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 200,
+        "ignoreComments": true
+      }
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "ImportDeclaration": "never"
+      }
+    ],
+    "no-await-in-loop": [
+      "off"
+    ],
+    "import/no-extraneous-dependencies": [
+      "off"
+    ],
+    "no-case-declarations": [
+      "off"
+    ],
+    "no-restricted-syntax": [
+      "error",
+      "WithStatement"
+    ],
+    "default-case": "off",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true
+      }
+    ],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "padded-blocks": "off",
+    "lines-between-class-members": "off",
+    "import/prefer-default-export": "off",
+    "no-unreachable": "warn",
+    "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "mjs": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "react-native/no-color-literals": 2,
+    "react-native/no-inline-styles": 2,
+    "react-native/no-raw-text": 2,
+    "react-native/no-single-element-style-arrays": 2,
+    "react-native/no-unused-styles": 2,
+    "react-native/sort-styles": [
+      "error",
+      "asc",
+      {
+        "ignoreClassNames": true
+      }
+    ],
+    "react-native/split-platform-components": 2
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": [
+          "src"
+        ],
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".js"
+        ]
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+      ],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ]
+}
