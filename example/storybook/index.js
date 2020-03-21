@@ -1,12 +1,23 @@
+/* eslint-disable global-require */
+import React from 'react';
 import { AppRegistry } from 'react-native';
-import { getStorybookUI, configure } from '@storybook/react-native';
+import { getStorybookUI, configure, addDecorator } from '@storybook/react-native';
+import { ApolloProvider } from 'react-apollo';
 import { name as appName } from '../app.json';
+import mockClient from './components/mockApolloClient/mockApolloClient';
 
 import './rn-addons';
 
+const client = mockClient();
+
+addDecorator((getStory) => (
+  <ApolloProvider client={client}>
+    {getStory()}
+  </ApolloProvider>
+));
+
 // import stories
 configure(() => {
-  // eslint-disable-next-line
   require('./stories');
 }, module);
 

@@ -36,12 +36,12 @@ module.exports = {
           },
         ],
       },
-      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        loader: 'source-map-loader',
-      },
+      // // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      // {
+      //   enforce: 'pre',
+      //   test: /\.js$/,
+      //   loader: 'source-map-loader',
+      // },
     ],
   },
 
@@ -53,6 +53,9 @@ module.exports = {
     react: 'react',
     reactDOM: 'react-dom',
     'react-native': 'react-native',
+    'react-apollo': 'react-apollo',
+    'deep-equal': 'deep-equal',
+    'apollo-client': 'apollo-client',
   },
 
   plugins: [

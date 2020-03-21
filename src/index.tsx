@@ -1,4 +1,3 @@
-import { Hello } from './components/Hello';
+import ApolloFlatList from './components/ApolloFlatList/ApolloFlatList';
 
-export * as Test from './styles/index';
-export default Hello;
+export default ApolloFlatList;

@@ -30,6 +30,6 @@ Includes support for typescript and unit tests.
 
 3. Add a new git repo and push
 
-4. Any non development dependencies must be added to the devDependencies and also the peerDependencies. They must also be added to webpack config `externals` so they are not bundled.
+4. Any non development dependencies must be added to the devDependencies and also the peerDependencies.
 
 5. Tag versions in git so they be selected on installation
