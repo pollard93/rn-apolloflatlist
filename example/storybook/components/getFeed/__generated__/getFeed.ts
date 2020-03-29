@@ -22,6 +22,7 @@ export interface getFeed {
 }
 
 export interface getFeedVariables {
+  search?: string;
   first: number;
   after?: string | null;
 }

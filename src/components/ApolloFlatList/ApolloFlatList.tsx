@@ -76,35 +76,59 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
     this.itemAccessor = itemAccessor;
   }
 
-  static getDerivedStateFromProps(props: ApolloFlatListProps<any, any, any>, state: ApolloFlatListState<any>): ApolloFlatListState<any> {
-    if (deepEqual(props.variables, state.variables)) return null;
 
-    // If props.variables have changed, merge them into the state
+  /**
+   * To test variables are equal, append after:null on both
+   */
+  static deepEqual(a, b) {
+    return deepEqual(
+      { ...a, after: null },
+      { ...b, after: null },
+    );
+  }
+
+
+  /**
+   * Merge props.variables into state.variables
+   */
+  static getDerivedStateFromProps(props: ApolloFlatListProps<any, any, any>, state: ApolloFlatListState<any>): ApolloFlatListState<any> {
     return {
       ...state,
       variables: {
         ...state.variables,
+        ...props.variables,
       },
     };
   }
 
+
   shouldComponentUpdate(nextProps: ApolloFlatListProps<any, any, any>, nextState: ApolloFlatListState<any>) {
-    // At the time of writing this hook is not called when props are updated for some unknwon reason
-    // However it is called in testing, so must be kept
+    /**
+     * Should update if the nextProps.variables are different from state.variables
+     */
+    if (!ApolloFlatList.deepEqual(nextProps.variables, this.state.variables)) {
+      /**
+       * If subscribeToMore is set then unsubscribe and subscribe
+       */
+      if (this.subscribeToMore) {
+        this.tryUnsubscribe();
+        this.unSubscribe = this.subscribeToMore(this.props.subscriptionOptions);
+      }
+
+      return true;
+    }
+
+    /**
+     * Otherwise, update if the freshing state changes
+     */
     return nextState.refreshing !== this.state.refreshing;
   }
 
-  componentDidUpdate(prevProps: ApolloFlatListProps<any, any, any>) {
-    // If props.variables has changed then we need to unsubscribe and resubscribe
-    if (deepEqual(prevProps.variables, this.props.variables)) {
-      this.tryUnsubscribe();
-      this.unSubscribe = this.subscribeToMore(this.props.subscriptionOptions);
-    }
-  }
 
   componentWillUnmount() {
     this.tryUnsubscribe();
   }
+
 
   onEndReached = () => {
     // If loading more or have got all that we can
@@ -144,12 +168,14 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
     });
   };
 
+
   tryUnsubscribe = () => {
     if (this.unSubscribe) {
       this.unSubscribe();
       this.unSubscribe = null;
     }
   }
+
 
   onRefresh = () => {
     this.setState({
@@ -164,6 +190,7 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
       });
     });
   }
+
 
   render() {
     const { query, context, renderItem } = this.props;
