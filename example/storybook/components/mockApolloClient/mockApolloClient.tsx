@@ -17,14 +17,14 @@ export default function createClient(overwriteMocks = {}) {
         id: ID!
         content: String!
       }
-    
+
       type PostsPayload {
         posts: [Post!]!
         count: Int!
       }
 
       type Query {
-        getFeed(first: Int!, after: String): PostsPayload!
+        getFeed(search: String, first: Int!, after: String): PostsPayload!
       }
     `,
     resolverValidationOptions: {
