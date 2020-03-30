@@ -14,7 +14,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   LoadingErrorComponent: (queryResult: QueryResult<Payload, Variables>) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
   ListFooterComponent?: (moreToLoad: boolean) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
   ListHeaderComponent?: (moreToLoad: boolean) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
-  FlatListProps?: FlatListProps<any>; // Extra props to override
+  FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
 }
 
