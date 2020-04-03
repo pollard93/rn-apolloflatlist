@@ -16,6 +16,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   ListHeaderComponent?: (moreToLoad: boolean) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
   FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
+  debug?: boolean; // Console logs the request response
 }
 
 export interface ApolloFlatListState<Variables> {
@@ -201,6 +202,11 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
         variables={this.state.variables}
       >
         {(args) => {
+          if (this.props.debug) {
+            // eslint-disable-next-line no-console
+            console.log(args);
+          }
+
           const { data, error, loading, client, fetchMore, subscribeToMore, refetch } = args;
           if ((loading && !this.state.refreshing) || error) return this.props.LoadingErrorComponent(args);
 
