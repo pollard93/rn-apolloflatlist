@@ -1,12 +1,12 @@
 {
   "name": "mbp-components-rn-apolloflatlist",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Boilerplate to quickstart React Native component development",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.prod.config.js",
     "build:watch": "webpack --watch --config webpack.config.js",
     "format:clean": "rimraf dist",
     "prepare": "run-s format:clean build",
