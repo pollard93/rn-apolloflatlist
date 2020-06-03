@@ -17,6 +17,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
   debug?: boolean; // Console logs the request response
+  disableRefresh?: boolean;
 }
 
 export interface ApolloFlatListState<Variables> {
@@ -238,13 +239,17 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
               data={items}
               onEndReachedThreshold={0.1}
               onEndReached={this.onEndReached}
-              ListFooterComponent={() => this.props.ListFooterComponent && this.props.ListFooterComponent(moreToLoad)}
-              ListHeaderComponent={() => this.props.ListHeaderComponent && this.props.ListHeaderComponent(moreToLoad)}
+              ListFooterComponent={() => (this.props.ListFooterComponent ? this.props.ListFooterComponent(moreToLoad) : null)}
+              ListHeaderComponent={() => (this.props.ListHeaderComponent ? this.props.ListHeaderComponent(moreToLoad) : null)}
               refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this.onRefresh}
-                />
+                !this.props.disableRefresh
+                  ? (
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this.onRefresh}
+                    />
+                  )
+                  : undefined
               }
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
