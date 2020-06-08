@@ -5,15 +5,22 @@ import ApolloClient, { SubscribeToMoreOptions } from 'apollo-client';
 import { Query, QueryResult } from 'react-apollo';
 import deepEqual from 'deep-equal';
 
+export interface QueryResultProps<Payload, Variables> {
+  queryResult: QueryResult<Payload, Variables>,
+  moreToLoad: boolean;
+  maxCount: number;
+  currentCount: number;
+}
+
 export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = null, SubPayload = null> {
   query: any; // gql cursor based query
   variables: Variables; // Variables of that query
   context?: any; // Context for request
   accessor: string; // For accessing the data object returned from query (e.g getFeed.posts)
   renderItem: FlatListProps<Item>['renderItem']; // Render item function
-  ListEmptyComponent?: FC<QueryResult<Payload, Variables>>;
-  ListFooterComponent?: FC<QueryResult<Payload, Variables>>;
-  ListHeaderComponent?: FC<QueryResult<Payload, Variables>>;
+  ListEmptyComponent?: FC<QueryResultProps<Payload, Variables>>;
+  ListFooterComponent?: FC<QueryResultProps<Payload, Variables>>;
+  ListHeaderComponent?: FC<QueryResultProps<Payload, Variables>>;
   FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
   debug?: boolean; // Console logs the request response
@@ -231,14 +238,21 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
             this.unSubscribe = this.subscribeToMore(this.props.subscriptionOptions);
           }
 
+          const queryResultProps: QueryResultProps<Payload, Variables> = {
+            queryResult: args,
+            moreToLoad: this.currentCount < this.maxCount,
+            maxCount: this.maxCount,
+            currentCount: this.currentCount,
+          };
+
           return (
             <FlatList
               data={items}
               onEndReachedThreshold={0.2}
               onEndReached={this.onEndReached}
-              ListEmptyComponent={this.props.ListEmptyComponent && this.props.ListEmptyComponent(args)}
-              ListHeaderComponent={this.props.ListHeaderComponent && this.props.ListHeaderComponent(args)}
-              ListFooterComponent={this.props.ListFooterComponent && this.props.ListFooterComponent(args)}
+              ListEmptyComponent={this.props.ListEmptyComponent && this.props.ListEmptyComponent(queryResultProps)}
+              ListHeaderComponent={this.props.ListHeaderComponent && this.props.ListHeaderComponent(queryResultProps)}
+              ListFooterComponent={this.props.ListFooterComponent && this.props.ListFooterComponent(queryResultProps)}
               refreshControl={
                 !this.props.disableRefresh
                   ? (

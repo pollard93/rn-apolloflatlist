@@ -4,7 +4,7 @@
 import React, { useState, FC } from 'react';
 import { storiesOf } from '@storybook/react-native';
 import { Text, View, TextInput } from 'react-native';
-import ApolloFlatList, { HeaderFooterProps } from 'mbp-components-rn-apolloflatlist';
+import ApolloFlatList, { QueryResultProps } from 'mbp-components-rn-apolloflatlist';
 import { QueryResult } from 'react-apollo';
 import { getFeedVariables, getFeed, getFeed_getFeed_posts } from '../components/getFeed/__generated__/getFeed';
 import { feedSubVariables, feedSub } from '../components/feedSub/__generated__/feedSub';
@@ -22,7 +22,7 @@ class ApolloFlatListExt extends ApolloFlatList<getFeedVariables, getFeed, getFee
  * Generic header footer component
  * Must be defined out of scope of render
  */
-const HeaderFooterComponent: FC<QueryResult<getFeed, getFeedVariables>> = (props) => <Text>{JSON.stringify(props)}</Text>;
+const HeaderFooterComponent: FC<QueryResultProps<getFeed, getFeedVariables>> = (props) => <Text>{JSON.stringify(props)}</Text>;
 
 
 storiesOf('ApolloFlatList', module)
@@ -82,7 +82,7 @@ storiesOf('ApolloFlatList', module)
     return <TestComponent />;
   })
   .add('ApolloFlatList - dynamic variables', () => {
-    interface HeaderWithSearchProps extends QueryResult<getFeed, getFeedVariables> {
+    interface HeaderWithSearchProps extends QueryResultProps<getFeed, getFeedVariables> {
       search: any;
       setSearch: any;
     }
