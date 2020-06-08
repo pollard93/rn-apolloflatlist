@@ -235,7 +235,6 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
 
           return (
             <FlatList
-              {...this.props.FlatListProps}
               data={items}
               onEndReachedThreshold={0.1}
               onEndReached={this.onEndReached}
@@ -253,6 +252,7 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
               }
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
+              {...this.props.FlatListProps}
             />
           );
         }}
