@@ -5,7 +5,6 @@ import React, { useState, FC } from 'react';
 import { storiesOf } from '@storybook/react-native';
 import { Text, View, TextInput } from 'react-native';
 import ApolloFlatList, { QueryResultProps } from 'mbp-components-rn-apolloflatlist';
-import { QueryResult } from 'react-apollo';
 import { getFeedVariables, getFeed, getFeed_getFeed_posts } from '../components/getFeed/__generated__/getFeed';
 import { feedSubVariables, feedSub } from '../components/feedSub/__generated__/feedSub';
 import { GET_FEED_QUERY } from '../components/getFeed/getFeed';
@@ -90,6 +89,7 @@ storiesOf('ApolloFlatList', module)
 
     /**
      * Header with search, props extend HeaderFooterProps
+     * Must be defined out of scope
      */
     const HeaderWithSearch: FC<HeaderWithSearchProps> = (props) => (
       <TextInput
