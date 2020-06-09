@@ -1,9 +1,16 @@
 /* eslint-disable max-len */
-import React, { Component } from 'react';
+import React, { Component, FC } from 'react';
 import { FlatList, RefreshControl, FlatListProps } from 'react-native';
 import ApolloClient, { SubscribeToMoreOptions } from 'apollo-client';
 import { Query, QueryResult } from 'react-apollo';
 import deepEqual from 'deep-equal';
+
+export interface QueryResultProps<Payload, Variables> {
+  queryResult: QueryResult<Payload, Variables>,
+  moreToLoad: boolean;
+  maxCount: number;
+  currentCount: number;
+}
 
 export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = null, SubPayload = null> {
   query: any; // gql cursor based query
@@ -11,9 +18,9 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   context?: any; // Context for request
   accessor: string; // For accessing the data object returned from query (e.g getFeed.posts)
   renderItem: FlatListProps<Item>['renderItem']; // Render item function
-  LoadingErrorComponent: (queryResult: QueryResult<Payload, Variables>) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
-  ListFooterComponent?: (moreToLoad: boolean) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
-  ListHeaderComponent?: (moreToLoad: boolean) => any; // Footer component with boolean whether there is more to load or not, useful for rendering activity or message when no more
+  ListEmptyComponent?: FC<QueryResultProps<Payload, Variables>>;
+  ListFooterComponent?: FC<QueryResultProps<Payload, Variables>>;
+  ListHeaderComponent?: FC<QueryResultProps<Payload, Variables>>;
   FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
   debug?: boolean; // Console logs the request response
@@ -208,14 +215,13 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
             console.log(args);
           }
 
-          const { data, error, loading, client, fetchMore, subscribeToMore, refetch } = args;
-          if ((loading && !this.state.refreshing) || error) return this.props.LoadingErrorComponent(args);
+          const { data, client, fetchMore, subscribeToMore, refetch } = args;
 
           /* eslint-disable dot-notation, prefer-destructuring */
           // Get the payload and data from response
-          const payload = data[this.payloadAccessor];
-          const items: any[] = payload[this.itemAccessor];
-          const count: number = payload.count;
+          const payload = data && data[this.payloadAccessor];
+          const items: any[] = payload ? payload[this.itemAccessor] : [];
+          const count: number = payload ? payload.count : null;
           /* eslint-enable dot-notation, prefer-destructuring */
 
           // Set vars
@@ -225,7 +231,6 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
           this.currentCount = items.length;
           this.maxCount = count;
           this.lastId = items.length && items[items.length - 1].id;
-          const moreToLoad = this.currentCount < this.maxCount;
 
           // Subscribe on first render and set in class for use in componentDidUpdate
           if (this.props.subscriptionOptions && !this.subscribeToMore) {
@@ -233,14 +238,21 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
             this.unSubscribe = this.subscribeToMore(this.props.subscriptionOptions);
           }
 
+          const queryResultProps: QueryResultProps<Payload, Variables> = {
+            queryResult: args,
+            moreToLoad: this.currentCount < this.maxCount,
+            maxCount: this.maxCount,
+            currentCount: this.currentCount,
+          };
+
           return (
             <FlatList
-              {...this.props.FlatListProps}
               data={items}
-              onEndReachedThreshold={0.1}
+              onEndReachedThreshold={0.2}
               onEndReached={this.onEndReached}
-              ListFooterComponent={() => (this.props.ListFooterComponent ? this.props.ListFooterComponent(moreToLoad) : null)}
-              ListHeaderComponent={() => (this.props.ListHeaderComponent ? this.props.ListHeaderComponent(moreToLoad) : null)}
+              ListEmptyComponent={this.props.ListEmptyComponent && this.props.ListEmptyComponent(queryResultProps)}
+              ListHeaderComponent={this.props.ListHeaderComponent && this.props.ListHeaderComponent(queryResultProps)}
+              ListFooterComponent={this.props.ListFooterComponent && this.props.ListFooterComponent(queryResultProps)}
               refreshControl={
                 !this.props.disableRefresh
                   ? (
@@ -253,6 +265,7 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
               }
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
+              {...this.props.FlatListProps}
             />
           );
         }}
