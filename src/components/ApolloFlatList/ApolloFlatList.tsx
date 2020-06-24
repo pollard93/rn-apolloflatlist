@@ -25,6 +25,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
   debug?: boolean; // Console logs the request response
   disableRefresh?: boolean;
+  disablePagination?: boolean;
 }
 
 export interface ApolloFlatListState<Variables> {
@@ -248,8 +249,8 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
           return (
             <FlatList
               data={items}
-              onEndReachedThreshold={0.2}
-              onEndReached={this.onEndReached}
+              onEndReachedThreshold={!this.props.disablePagination && 0.2}
+              onEndReached={!this.props.disablePagination && this.onEndReached}
               ListEmptyComponent={this.props.ListEmptyComponent && this.props.ListEmptyComponent(queryResultProps)}
               ListHeaderComponent={this.props.ListHeaderComponent && this.props.ListHeaderComponent(queryResultProps)}
               ListFooterComponent={this.props.ListFooterComponent && this.props.ListFooterComponent(queryResultProps)}
