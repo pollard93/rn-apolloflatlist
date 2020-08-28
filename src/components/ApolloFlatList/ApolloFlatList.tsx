@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { Component, FC } from 'react';
 import { FlatList, RefreshControl, FlatListProps } from 'react-native';
-import ApolloClient, { SubscribeToMoreOptions } from 'apollo-client';
+import ApolloClient, { SubscribeToMoreOptions, WatchQueryFetchPolicy } from 'apollo-client';
 import { Query, QueryResult } from 'react-apollo';
 import deepEqual from 'deep-equal';
 
@@ -16,6 +16,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   query: any; // gql cursor based query
   variables: Variables; // Variables of that query
   context?: any; // Context for request
+  fetchPolicy?: WatchQueryFetchPolicy;
   accessor: string; // For accessing the data object returned from query (e.g getFeed.posts)
   renderItem: FlatListProps<Item>['renderItem']; // Render item function
   ListEmptyComponent?: FC<QueryResultProps<Payload, Variables>>;
@@ -209,6 +210,7 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
         query={query}
         context={context}
         variables={this.state.variables}
+        fetchPolicy={this.props.fetchPolicy}
       >
         {(args) => {
           if (this.props.debug) {
