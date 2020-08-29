@@ -22,6 +22,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   ListEmptyComponent?: FC<QueryResultProps<Payload, Variables>>;
   ListFooterComponent?: FC<QueryResultProps<Payload, Variables>>;
   ListHeaderComponent?: FC<QueryResultProps<Payload, Variables>>;
+  children?: FC<QueryResultProps<Payload, Variables>>; // Rendered after flatlist, so can positioned to cover
   FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
   debug?: boolean; // Console logs the request response
@@ -249,27 +250,31 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
           };
 
           return (
-            <FlatList
-              data={items}
-              onEndReachedThreshold={!this.props.disablePagination && 0.2}
-              onEndReached={!this.props.disablePagination && this.onEndReached}
-              ListEmptyComponent={this.props.ListEmptyComponent && this.props.ListEmptyComponent(queryResultProps)}
-              ListHeaderComponent={this.props.ListHeaderComponent && this.props.ListHeaderComponent(queryResultProps)}
-              ListFooterComponent={this.props.ListFooterComponent && this.props.ListFooterComponent(queryResultProps)}
-              refreshControl={
-                !this.props.disableRefresh
-                  ? (
-                    <RefreshControl
-                      refreshing={this.state.refreshing}
-                      onRefresh={this.onRefresh}
-                    />
-                  )
-                  : undefined
-              }
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              {...this.props.FlatListProps}
-            />
+            <>
+              <FlatList
+                data={items}
+                onEndReachedThreshold={!this.props.disablePagination && 0.2}
+                onEndReached={!this.props.disablePagination && this.onEndReached}
+                ListEmptyComponent={this.props.ListEmptyComponent && this.props.ListEmptyComponent(queryResultProps)}
+                ListHeaderComponent={this.props.ListHeaderComponent && this.props.ListHeaderComponent(queryResultProps)}
+                ListFooterComponent={this.props.ListFooterComponent && this.props.ListFooterComponent(queryResultProps)}
+                refreshControl={
+                  !this.props.disableRefresh
+                    ? (
+                      <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh}
+                      />
+                    )
+                    : undefined
+                }
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                {...this.props.FlatListProps}
+              />
+
+              {this.props.children && this.props.children(queryResultProps)}
+            </>
           );
         }}
       </Query>
