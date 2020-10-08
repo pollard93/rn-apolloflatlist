@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { Component, FC } from 'react';
+import React, { Component, FC, MutableRefObject } from 'react';
 import { FlatList, RefreshControl, FlatListProps } from 'react-native';
 import ApolloClient, { SubscribeToMoreOptions, WatchQueryFetchPolicy } from 'apollo-client';
 import { Query, QueryResult } from 'react-apollo';
@@ -24,6 +24,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   ListHeaderComponent?: FC<QueryResultProps<Payload, Variables>>;
   children?: FC<QueryResultProps<Payload, Variables>>; // Rendered after flatlist, so can positioned to cover
   FlatListProps?: Partial<FlatListProps<any>>; // Extra props to override
+  innerRef?: MutableRefObject<FlatList<any>>;
   subscriptionOptions?: SubscribeToMoreOptions<Payload, SubVariables, SubPayload>; // Subscription props, see SubscribeToMoreOptions. If this is passed the subscription will connext and disconnect appropriately
   debug?: boolean; // Console logs the request response
   disableRefresh?: boolean;
@@ -252,6 +253,7 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
           return (
             <>
               <FlatList
+                ref={this.props.innerRef}
                 data={items}
                 onEndReachedThreshold={!this.props.disablePagination && 0.2}
                 onEndReached={!this.props.disablePagination && this.onEndReached}
