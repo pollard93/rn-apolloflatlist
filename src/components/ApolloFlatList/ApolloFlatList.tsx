@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { Component, FC, MutableRefObject } from 'react';
+import React, { Component, FC, MutableRefObject, ReactText } from 'react';
 import { FlatList, RefreshControl, FlatListProps } from 'react-native';
 import ApolloClient, { SubscribeToMoreOptions, WatchQueryFetchPolicy } from 'apollo-client';
 import { Query, QueryResult } from 'react-apollo';
@@ -13,6 +13,7 @@ export interface QueryResultProps<Payload, Variables> {
 }
 
 export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = null, SubPayload = null> {
+  key?: ReactText;
   query: any; // gql cursor based query
   variables: Variables; // Variables of that query
   context?: any; // Context for request
@@ -258,6 +259,7 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
           return (
             <>
               <FlatList
+                key={this.props.key}
                 ref={this.props.innerRef}
                 data={items}
                 onEndReachedThreshold={!this.props.disablePagination && 0.2}
