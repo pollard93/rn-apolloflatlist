@@ -29,6 +29,7 @@ export interface ApolloFlatListProps<Variables, Payload, Item, SubVariables = nu
   debug?: boolean; // Console logs the request response
   disableRefresh?: boolean;
   disablePagination?: boolean;
+  shouldUpdateOnPropsChange?: boolean; // Will allow a rerender if props.FlatListProps change
 }
 
 export interface ApolloFlatListState<Variables> {
@@ -118,8 +119,12 @@ class ApolloFlatList<Variables, Payload, Item, SubVariables = null, SubPayload =
   shouldComponentUpdate(nextProps: ApolloFlatListProps<any, any, any>, nextState: ApolloFlatListState<any>) {
     /**
      * Should update if the nextProps.variables are different from state.variables
+     * Or props.FlatListProps change and props.shouldUpdateOnPropsChange is true
      */
-    if (!ApolloFlatList.deepEqual(nextProps.variables, this.state.variables)) {
+    if (
+      !ApolloFlatList.deepEqual(nextProps.variables, this.state.variables)
+      || (this.props.shouldUpdateOnPropsChange && !ApolloFlatList.deepEqual(nextProps.FlatListProps, this.props.FlatListProps))
+    ) {
       /**
        * If subscribeToMore is set then unsubscribe and subscribe
        */
